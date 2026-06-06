@@ -19,3 +19,4 @@ Once installed, configure the plugin via the Jellyfin Dashboard:
 - Enter your **Radarr**, **Sonarr**, and **Prowlarr** URLs and API Keys.
 - Select a temporary download/cache directory.
 - Run a library scan!
+still in beta 
