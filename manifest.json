@@ -1,6 +1,6 @@
 [
   {
-    "guid": "f9e7b231-15cf-4822-ba6e-7164b3c4f7a2",
+    "guid": "b5d8dc02-b797-485b-9f53-c9e95689d5bd",
     "name": "Torrent Streamer",
     "description": "Stream torrents instantly from Sonarr and Radarr.",
     "overview": "A Jellyfin plugin that seamlessly integrates your Sonarr and Radarr libraries, allowing you to instantly stream movies and TV shows directly from torrents.",
@@ -8,11 +8,11 @@
     "category": "Media",
     "versions": [
       {
-        "version": "1.0.3.0",
-        "changelog": "Critical hotfix: Resolved plugin malfunction on load, fixed engine settings, and improved qBittorrent streaming performance with instant partial reads.",
+        "version": "1.0.4.0",
+        "changelog": "Critical hotfix: Resolved plugin malfunction by ensuring GUID consistency, fixed engine settings, and improved qBittorrent streaming performance.",
         "targetAbi": "10.9.0.0",
-        "sourceUrl": "https://github.com/mazeneltelbany78-boop/Torrent-Streamer/releases/download/Torrent-streamer/TorrentStreamer_1.0.3.0.zip",
-        "checksum": "D67579D156B1F71F9EFE5986DF49E28F",
+        "sourceUrl": "https://github.com/mazeneltelbany78-boop/Torrent-Streamer/releases/download/Torrent-streamer/TorrentStreamer_1.0.4.0.zip",
+        "checksum": "BAC51461977D524B0761BC6AA6B53616",
         "timestamp": "2026-06-07T00:00:00Z"
       },
       {
