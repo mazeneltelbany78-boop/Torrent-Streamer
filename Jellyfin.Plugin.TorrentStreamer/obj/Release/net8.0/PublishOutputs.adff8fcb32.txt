@@ -1,0 +1,16 @@
+A:\projects\jellyfin plugin\Jellyfin.Plugin.TorrentStreamer\bin\Release\net8.0\publish\Jellyfin.Plugin.TorrentStreamer.dll
+A:\projects\jellyfin plugin\Jellyfin.Plugin.TorrentStreamer\bin\Release\net8.0\publish\Jellyfin.Plugin.TorrentStreamer.deps.json
+A:\projects\jellyfin plugin\Jellyfin.Plugin.TorrentStreamer\bin\Release\net8.0\publish\Jellyfin.Plugin.TorrentStreamer.pdb
+A:\projects\jellyfin plugin\Jellyfin.Plugin.TorrentStreamer\bin\Release\net8.0\publish\Mono.Nat.dll
+A:\projects\jellyfin plugin\Jellyfin.Plugin.TorrentStreamer\bin\Release\net8.0\publish\MonoTorrent.BEncoding.dll
+A:\projects\jellyfin plugin\Jellyfin.Plugin.TorrentStreamer\bin\Release\net8.0\publish\MonoTorrent.Client.dll
+A:\projects\jellyfin plugin\Jellyfin.Plugin.TorrentStreamer\bin\Release\net8.0\publish\MonoTorrent.Connections.dll
+A:\projects\jellyfin plugin\Jellyfin.Plugin.TorrentStreamer\bin\Release\net8.0\publish\MonoTorrent.Dht.dll
+A:\projects\jellyfin plugin\Jellyfin.Plugin.TorrentStreamer\bin\Release\net8.0\publish\MonoTorrent.Factories.dll
+A:\projects\jellyfin plugin\Jellyfin.Plugin.TorrentStreamer\bin\Release\net8.0\publish\MonoTorrent.Messages.dll
+A:\projects\jellyfin plugin\Jellyfin.Plugin.TorrentStreamer\bin\Release\net8.0\publish\MonoTorrent.PiecePicking.dll
+A:\projects\jellyfin plugin\Jellyfin.Plugin.TorrentStreamer\bin\Release\net8.0\publish\MonoTorrent.PieceWriter.dll
+A:\projects\jellyfin plugin\Jellyfin.Plugin.TorrentStreamer\bin\Release\net8.0\publish\MonoTorrent.PortForwarding.dll
+A:\projects\jellyfin plugin\Jellyfin.Plugin.TorrentStreamer\bin\Release\net8.0\publish\MonoTorrent.Trackers.dll
+A:\projects\jellyfin plugin\Jellyfin.Plugin.TorrentStreamer\bin\Release\net8.0\publish\MonoTorrent.dll
+A:\projects\jellyfin plugin\Jellyfin.Plugin.TorrentStreamer\bin\Release\net8.0\publish\ReusableTasks.dll

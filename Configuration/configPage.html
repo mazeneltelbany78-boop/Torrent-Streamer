@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Torrent Streamer</title>
+</head>
+<body>
+    <div id="TorrentStreamerConfigurationPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-checkbox">
+        <div data-role="content">
+            <div class="content-primary">
+                <form id="TorrentStreamerConfigForm">
+                    <div class="sectionTitleContainer flex align-items-center">
+                        <h2 class="sectionTitle">Torrent Streamer Configuration</h2>
+                        <a is="emby-button" class="raised button-alt headerHelpButton emby-button" target="_blank" href="https://github.com/your-repo/torrent-streamer">Help</a>
+                    </div>
+                    <p>Configure Sonarr and Radarr connections to enable streaming torrents directly.</p>
+
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="RadarrUrl">Radarr URL:</label>
+                        <input id="RadarrUrl" name="RadarrUrl" type="text" is="emby-input" required="required" />
+                        <div class="fieldDescription">Example: http://localhost:7878</div>
+                    </div>
+                    
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="RadarrApiKey">Radarr API Key:</label>
+                        <input id="RadarrApiKey" name="RadarrApiKey" type="text" is="emby-input" required="required" />
+                    </div>
+                    
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="SonarrUrl">Sonarr URL:</label>
+                        <input id="SonarrUrl" name="SonarrUrl" type="text" is="emby-input" required="required" />
+                        <div class="fieldDescription">Example: http://localhost:8989</div>
+                    </div>
+                    
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="SonarrApiKey">Sonarr API Key:</label>
+                        <input id="SonarrApiKey" name="SonarrApiKey" type="text" is="emby-input" required="required" />
+                    </div>
+
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="ProwlarrUrl">Prowlarr URL (Optional):</label>
+                        <input id="ProwlarrUrl" name="ProwlarrUrl" type="text" is="emby-input" />
+                        <div class="fieldDescription">Example: http://localhost:9696. Used to download .torrent files directly from Prowlarr.</div>
+                    </div>
+                    
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="ProwlarrApiKey">Prowlarr API Key (Optional):</label>
+                        <input id="ProwlarrApiKey" name="ProwlarrApiKey" type="text" is="emby-input" />
+                    </div>
+
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="ServerUrl">Server IP / URL:</label>
+                        <input id="ServerUrl" name="ServerUrl" type="text" is="emby-input" required="required" />
+                        <div class="fieldDescription">The IP or domain of your Jellyfin server with port 19420 (e.g., http://10.0.1.2:19420). Used in generated .strm files.</div>
+                    </div>
+
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="DownloadDirectory">Download/Cache Directory:</label>
+                        <input id="DownloadDirectory" name="DownloadDirectory" type="text" is="emby-input" required="required" />
+                        <div class="fieldDescription">The temporary folder where torrents are downloaded during streaming.</div>
+                    </div>
+                    
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="UploadThrottleKBps">Upload Throttle (KB/s):</label>
+                        <input id="UploadThrottleKBps" name="UploadThrottleKBps" type="number" is="emby-input" required="required" min="0" />
+                        <div class="fieldDescription">Set to 0 for unlimited. Default 50.</div>
+                    </div>
+
+                    <div class="checkboxContainer checkboxContainer-withDescription">
+                        <label>
+                             <input type="checkbox" is="emby-checkbox" id="KeepFilesAfterStreaming" name="KeepFilesAfterStreaming" />
+                             <span>Keep files after streaming</span>
+                        </label>
+                        <div class="fieldDescription checkboxFieldDescription">If unchecked, the torrent file will be deleted when playback stops.</div>
+                    </div>
+
+                    <div>
+                        <button is="emby-button" type="submit" class="raised button-submit block emby-button">
+                            <span>Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var TorrentStreamerConfigurationPage = {
+                pluginUniqueId: "f9e7b231-15cf-4822-ba6e-7164b3c4f7a2"
+            };
+
+            $('#TorrentStreamerConfigurationPage').on('pageshow', function () {
+                Dashboard.showLoadingMsg();
+                var page = this;
+
+                ApiClient.getPluginConfiguration(TorrentStreamerConfigurationPage.pluginUniqueId).then(function (config) {
+                    $('#RadarrUrl', page).val(config.RadarrUrl || "");
+                    $('#RadarrApiKey', page).val(config.RadarrApiKey || "");
+                    $('#SonarrUrl', page).val(config.SonarrUrl || "");
+                    $('#SonarrApiKey', page).val(config.SonarrApiKey || "");
+                    $('#ProwlarrUrl', page).val(config.ProwlarrUrl || "");
+                    $('#ProwlarrApiKey', page).val(config.ProwlarrApiKey || "");
+                    $('#ServerUrl', page).val(config.ServerUrl || "http://127.0.0.1:19420");
+                    $('#DownloadDirectory', page).val(config.DownloadDirectory || "");
+                    $('#UploadThrottleKBps', page).val(config.UploadThrottleKBps || "50");
+                    $('#KeepFilesAfterStreaming', page).prop('checked', config.KeepFilesAfterStreaming || false);
+
+                    Dashboard.hideLoadingMsg();
+                });
+            });
+
+            $('#TorrentStreamerConfigForm').on('submit', function (e) {
+                Dashboard.showLoadingMsg();
+                var form = this;
+
+                ApiClient.getPluginConfiguration(TorrentStreamerConfigurationPage.pluginUniqueId).then(function (config) {
+                    config.RadarrUrl = $('#RadarrUrl', form).val();
+                    config.RadarrApiKey = $('#RadarrApiKey', form).val();
+                    config.SonarrUrl = $('#SonarrUrl', form).val();
+                    config.SonarrApiKey = $('#SonarrApiKey', form).val();
+                    config.ProwlarrUrl = $('#ProwlarrUrl', form).val();
+                    config.ProwlarrApiKey = $('#ProwlarrApiKey', form).val();
+                    config.ServerUrl = $('#ServerUrl', form).val();
+                    config.DownloadDirectory = $('#DownloadDirectory', form).val();
+                    config.UploadThrottleKBps = parseInt($('#UploadThrottleKBps', form).val(), 10);
+                    config.KeepFilesAfterStreaming = $('#KeepFilesAfterStreaming', form).prop('checked');
+
+                    ApiClient.updatePluginConfiguration(TorrentStreamerConfigurationPage.pluginUniqueId, config).then(function (result) {
+                        Dashboard.processPluginConfigurationUpdateResult(result);
+                    });
+                });
+
+                return false;
+            });
+        </script>
+    </div>
+</body>
+</html>

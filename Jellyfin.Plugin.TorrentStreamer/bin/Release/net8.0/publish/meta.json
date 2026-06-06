@@ -1,0 +1,10 @@
+{
+  "id": "f9e7b231-15cf-4822-ba6e-7164b3c4f7a2",
+  "name": "Torrent Streamer",
+  "description": "Stream torrents from Radarr and Sonarr via MonoTorrent.",
+  "category": "General",
+  "guid": "f9e7b231-15cf-4822-ba6e-7164b3c4f7a2",
+  "version": "1.0.0.0",
+  "targetAbi": "10.11.10.0",
+  "timestamp": "2024-06-01T00:00:00Z"
+}
