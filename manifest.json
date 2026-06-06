@@ -8,11 +8,11 @@
     "category": "Media",
     "versions": [
       {
-        "version": "1.0.2.0",
-        "changelog": "Added qBittorrent integration for faster external streaming",
+        "version": "1.0.3.0",
+        "changelog": "Critical hotfix: Resolved plugin malfunction on load, fixed engine settings, and improved qBittorrent streaming performance with instant partial reads.",
         "targetAbi": "10.9.0.0",
-        "sourceUrl": "https://github.com/mazeneltelbany78-boop/Torrent-Streamer/releases/download/Torrent-streamer/TorrentStreamer_1.0.2.0.zip",
-        "checksum": "0CC0D08E17EA332A14B097BD8B8D61EE",
+        "sourceUrl": "https://github.com/mazeneltelbany78-boop/Torrent-Streamer/releases/download/Torrent-streamer/TorrentStreamer_1.0.3.0.zip",
+        "checksum": "D67579D156B1F71F9EFE5986DF49E28F",
         "timestamp": "2026-06-07T00:00:00Z"
       },
       {
