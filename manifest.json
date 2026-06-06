@@ -8,6 +8,14 @@
     "category": "Media",
     "versions": [
       {
+        "version": "1.0.4.2",
+        "changelog": "Fixed an issue where the qBittorrent settings menu wouldn't appear due to browser caching.",
+        "targetAbi": "10.9.0.0",
+        "sourceUrl": "https://github.com/mazeneltelbany78-boop/Torrent-Streamer/releases/download/v1.0.4.2/Jellyfin.Plugin.TorrentStreamer_1.0.4.2.zip",
+        "checksum": "17C6C641658F51C55701C2EC6D04A1CF",
+        "timestamp": "2026-06-07T00:00:00Z"
+      },
+      {
         "version": "1.0.4.1",
         "changelog": "Critical hotfix: Resolved plugin load malfunction due to duplicate DLLs in package causing AssemblyLoad conflicts on Jellyfin startup.",
         "targetAbi": "10.9.0.0",
