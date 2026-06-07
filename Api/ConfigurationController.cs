@@ -49,16 +49,16 @@ namespace Jellyfin.Plugin.TorrentStreamer.Api
                 var res = await client.GetAsync(fullUrl);
                 if (res.IsSuccessStatusCode)
                 {
-                    return Content("{"success": true}", "application/json");
+                    return Content("{\"success\": true}", "application/json");
                 }
                 else
                 {
-                    return Content($"{"success": false, "message": "HTTP {res.StatusCode}"}", "application/json");
+                    return Content($"{{\"success\": false, \"message\": \"HTTP {res.StatusCode}\"}}", "application/json");
                 }
             }
             catch (Exception ex)
             {
-                return Content($"{"success": false, "message": "{ex.Message}"}", "application/json");
+                return Content($"{{\"success\": false, \"message\": \"{ex.Message}\"}}", "application/json");
             }
         }
     }
