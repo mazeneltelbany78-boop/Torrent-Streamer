@@ -36,6 +36,7 @@
                     <div class="inputContainer">
                         <label class="inputLabel inputLabelUnfocused" for="RadarrApiKey">Radarr API Key:</label>
                         <input id="RadarrApiKey" name="RadarrApiKey" type="text" is="emby-input" required="required" />
+                        <button type="button" is="emby-button" id="btn-test-radarr" class="raised emby-button" onclick="testConnection('radarr')" style="margin-top: 8px;">Test Radarr Connection</button>
                     </div>
                     
                     <div class="inputContainer">
@@ -47,6 +48,7 @@
                     <div class="inputContainer">
                         <label class="inputLabel inputLabelUnfocused" for="SonarrApiKey">Sonarr API Key:</label>
                         <input id="SonarrApiKey" name="SonarrApiKey" type="text" is="emby-input" required="required" />
+                        <button type="button" is="emby-button" id="btn-test-sonarr" class="raised emby-button" onclick="testConnection('sonarr')" style="margin-top: 8px;">Test Sonarr Connection</button>
                     </div>
 
                     <div class="inputContainer">
@@ -143,6 +145,28 @@
                 const sizes = ['B/s', 'KB/s', 'MB/s', 'GB/s'];
                 const i = Math.floor(Math.log(bytesPerSec) / Math.log(k));
                 return parseFloat((bytesPerSec / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+            }
+
+                        async function testConnection(type) {
+                const btn = document.getElementById('btn-test-' + type);
+                const url = type === 'radarr' ? document.getElementById('RadarrUrl').value : document.getElementById('SonarrUrl').value;
+                const key = type === 'radarr' ? document.getElementById('RadarrApiKey').value : document.getElementById('SonarrApiKey').value;
+                
+                btn.innerText = 'Testing...';
+                
+                try {
+                    const res = await fetch(/TorrentStreamer/TestConnection?type=&url=&key=);
+                    const data = await res.json();
+                    
+                    if (data.success) {
+                        Dashboard.alert('? Connection Successful!');
+                    } else {
+                        Dashboard.alert('? Failed: ' + data.message);
+                    }
+                } catch(e) {
+                    Dashboard.alert('? Request Failed.');
+                }
+                btn.innerText = 'Test Connection';
             }
 
             async function updateDashboard() {
@@ -249,4 +273,5 @@
     </div>
 </body>
 </html>
+
 
