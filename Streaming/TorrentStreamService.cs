@@ -29,6 +29,9 @@ namespace Jellyfin.Plugin.TorrentStreamer.Streaming
         // Lock to prevent race conditions when multiple Jellyfin ffmpeg threads request the stream simultaneously
         private static readonly SemaphoreSlim _addTorrentLock = new SemaphoreSlim(1, 1);
 
+        // Lock to prevent Sonarr from crashing during mass library scans by throttling active searches
+        private static readonly SemaphoreSlim _sonarrSearchLock = new SemaphoreSlim(2, 2);
+
         private string AppendTrackers(string magnet)
         {
             if (string.IsNullOrEmpty(magnet) || !magnet.StartsWith("magnet:", StringComparison.OrdinalIgnoreCase))
@@ -200,16 +203,25 @@ namespace Jellyfin.Plugin.TorrentStreamer.Streaming
                     }
                     else if (type == "episode" && !string.IsNullOrEmpty(config.SonarrUrl) && !string.IsNullOrEmpty(config.SonarrApiKey))
                     {
-                        var sonarrClient = new Jellyfin.Plugin.TorrentStreamer.Api.SonarrClient(httpClient, config.SonarrUrl, config.SonarrApiKey);
-                        var releases = await sonarrClient.GetReleases(mediaId);
-                        var best = System.Linq.Enumerable.Skip(System.Linq.Enumerable.OrderByDescending(releases, r => r.Seeders), attempt).FirstOrDefault(r => !string.IsNullOrEmpty(r.DownloadUrl) || !string.IsNullOrEmpty(r.MagnetUrl) || !string.IsNullOrEmpty(r.ReleaseHash) || !string.IsNullOrEmpty(r.InfoHash) || (!string.IsNullOrEmpty(r.Guid) && r.Guid.StartsWith("magnet:")));
-                        if (best != null) {
-                            if (!string.IsNullOrEmpty(best.MagnetUrl)) resolvedMagnet = best.MagnetUrl;
-                            else if (!string.IsNullOrEmpty(best.DownloadUrl)) resolvedMagnet = best.DownloadUrl;
-                            else if (!string.IsNullOrEmpty(best.ReleaseHash)) resolvedMagnet = $"magnet:?xt=urn:btih:{best.ReleaseHash}";
-                            else if (!string.IsNullOrEmpty(best.InfoHash)) resolvedMagnet = $"magnet:?xt=urn:btih:{best.InfoHash}";
-                            else if (!string.IsNullOrEmpty(best.Guid) && best.Guid.StartsWith("magnet:")) resolvedMagnet = best.Guid;
-                            if (string.IsNullOrEmpty(resolvedMagnet) && !string.IsNullOrEmpty(best.DownloadUrl)) downloadUrl = best.DownloadUrl;
+                        bool acquired = await _sonarrSearchLock.WaitAsync(2000);
+                        if (!acquired) {
+                            _logger.LogWarning("STREAM: Sonarr search concurrency limit reached (likely library scan). Skipping active search.");
+                            return null;
+                        }
+                        try {
+                            var sonarrClient = new Jellyfin.Plugin.TorrentStreamer.Api.SonarrClient(httpClient, config.SonarrUrl, config.SonarrApiKey);
+                            var releases = await sonarrClient.GetReleases(mediaId);
+                            var best = System.Linq.Enumerable.Skip(System.Linq.Enumerable.OrderByDescending(releases, r => r.Seeders), attempt).FirstOrDefault(r => !string.IsNullOrEmpty(r.DownloadUrl) || !string.IsNullOrEmpty(r.MagnetUrl) || !string.IsNullOrEmpty(r.ReleaseHash) || !string.IsNullOrEmpty(r.InfoHash) || (!string.IsNullOrEmpty(r.Guid) && r.Guid.StartsWith("magnet:")));
+                            if (best != null) {
+                                if (!string.IsNullOrEmpty(best.MagnetUrl)) resolvedMagnet = best.MagnetUrl;
+                                else if (!string.IsNullOrEmpty(best.DownloadUrl)) resolvedMagnet = best.DownloadUrl;
+                                else if (!string.IsNullOrEmpty(best.ReleaseHash)) resolvedMagnet = $"magnet:?xt=urn:btih:{best.ReleaseHash}";
+                                else if (!string.IsNullOrEmpty(best.InfoHash)) resolvedMagnet = $"magnet:?xt=urn:btih:{best.InfoHash}";
+                                else if (!string.IsNullOrEmpty(best.Guid) && best.Guid.StartsWith("magnet:")) resolvedMagnet = best.Guid;
+                                if (string.IsNullOrEmpty(resolvedMagnet) && !string.IsNullOrEmpty(best.DownloadUrl)) downloadUrl = best.DownloadUrl;
+                            }
+                        } finally {
+                            _sonarrSearchLock.Release();
                         }
                     }
 
@@ -442,7 +454,7 @@ namespace Jellyfin.Plugin.TorrentStreamer.Streaming
                     _logger.LogInformation("STREAM: Selected file: {Path} ({Length} bytes)", selectedFile.Path, selectedFile.Length);
                     try {
                         foreach (var f in manager.Files) {
-                            if (f == selectedFile) {
+                            if (f.Path == selectedFile.Path) {
                                 await manager.SetFilePriorityAsync(f, MonoTorrent.Priority.Highest);
                             } else {
                                 await manager.SetFilePriorityAsync(f, MonoTorrent.Priority.DoNotDownload);

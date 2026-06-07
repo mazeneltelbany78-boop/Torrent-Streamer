@@ -7,12 +7,12 @@
     "category":  "Media",
     "versions":  [
                      {
-                         "changelog":  "Fixed duplicated UI elements and corrupted layout in the Configuration page.",
-                         "version":  "1.0.5.6",
-                         "checksum":  "3e92f7ac7656397c3fc130c5d9b20744",
-                         "timestamp":  "2026-06-07T11:23:22Z",
+                         "changelog":  "Fixed Sonarr mass timeout crashes during library scan and fixed MonoTorrent stream prioritization causing instant playback failures.",
+                         "version":  "1.0.5.7",
+                         "checksum":  "21329e6fa627f07db29612db47cea5e0",
+                         "timestamp":  "2026-06-07T11:53:07Z",
                          "targetAbi":  "10.9.0.0",
-                         "sourceUrl":  "https://github.com/mazeneltelbany78-boop/Torrent-Streamer/releases/download/v1.0.5.6/Jellyfin.Plugin.TorrentStreamer_1.0.5.6.zip"
+                         "sourceUrl":  "https://github.com/mazeneltelbany78-boop/Torrent-Streamer/releases/download/v1.0.5.7/Jellyfin.Plugin.TorrentStreamer_1.0.5.7.zip"
                      },
                      {
                          "version":  "1.0.4.4",
