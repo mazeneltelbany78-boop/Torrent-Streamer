@@ -7,12 +7,12 @@
     "category":  "Media",
     "versions":  [
                      {
-                         "changelog":  "Refactored deployment pipeline and fully separated UI from backend API.",
-                         "version":  "1.0.5.3",
-                         "checksum":  "d05e763b1b38f766e60c8084bd2651b8",
-                         "timestamp":  "2026-06-07T11:09:07Z",
+                         "changelog":  "Fixed JSON string escaping issues and correctly finalized deployment pipeline.",
+                         "version":  "1.0.5.4",
+                         "checksum":  "8903bf9b965e2f9d3c4cfeb35ac6fe56",
+                         "timestamp":  "2026-06-07T11:09:46Z",
                          "targetAbi":  "10.9.0.0",
-                         "sourceUrl":  "https://github.com/mazeneltelbany78-boop/Torrent-Streamer/releases/download/v1.0.5.3/Jellyfin.Plugin.TorrentStreamer_1.0.5.3.zip"
+                         "sourceUrl":  "https://github.com/mazeneltelbany78-boop/Torrent-Streamer/releases/download/v1.0.5.4/Jellyfin.Plugin.TorrentStreamer_1.0.5.4.zip"
                      },
                      {
                          "version":  "1.0.4.4",
