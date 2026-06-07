@@ -25,6 +25,9 @@ namespace Jellyfin.Plugin.TorrentStreamer.Streaming
         
         // Cache to deduplicate and store indexer searches so retries are instantaneous
         private static ConcurrentDictionary<string, System.Threading.Tasks.Task<string>> _activeSearches = new ConcurrentDictionary<string, System.Threading.Tasks.Task<string>>();
+        
+        // Track cancellation tokens for streams to force-close hung MonoTorrent streams
+        private static ConcurrentDictionary<string, CancellationTokenSource> _streamCancellationTokens = new ConcurrentDictionary<string, CancellationTokenSource>();
 
         // Lock to prevent race conditions when multiple Jellyfin ffmpeg threads request the stream simultaneously
         private static readonly SemaphoreSlim _addTorrentLock = new SemaphoreSlim(1, 1);
@@ -470,8 +473,27 @@ namespace Jellyfin.Plugin.TorrentStreamer.Streaming
                     return;
                 }
 
-                // Get stream from MonoTorrent which handles prioritizing pieces automatically
-                using var stream = await manager.StreamProvider.CreateStreamAsync(selectedFile, CancellationToken.None);
+                // Force-cancel any previous hung streams for this torrent to avoid 'Dispose previous stream' exceptions
+                var hashKey = $"{type}_{idStr}";
+                if (_streamCancellationTokens.TryGetValue(hashKey, out var oldCts)) {
+                    try { oldCts.Cancel(); } catch { }
+                }
+                var streamCts = new CancellationTokenSource();
+                _streamCancellationTokens[hashKey] = streamCts;
+
+                Stream stream = null;
+                for (int i = 0; i < 15; i++) {
+                    try {
+                        stream = await manager.StreamProvider.CreateStreamAsync(selectedFile, streamCts.Token);
+                        break;
+                    } catch (InvalidOperationException) {
+                        await Task.Delay(200, streamCts.Token);
+                    }
+                }
+                if (stream == null) {
+                    throw new Exception("Failed to acquire MonoTorrent stream lock after multiple retries. The previous stream may not have disposed correctly.");
+                }
+                using var streamScope = stream;
 
                 context.Response.ContentType = "video/mp4"; // Generic, Jellyfin will probe it
                 context.Response.SendChunked = false;
@@ -506,7 +528,7 @@ namespace Jellyfin.Plugin.TorrentStreamer.Streaming
                 long bytesRemaining = context.Response.ContentLength64;
                 int bytesRead;
 
-                while (bytesRemaining > 0 && (bytesRead = await stream.ReadAsync(buffer, 0, (int)Math.Min(buffer.Length, bytesRemaining))) > 0)
+                while (bytesRemaining > 0 && (bytesRead = await stream.ReadAsync(buffer, 0, (int)Math.Min(buffer.Length, bytesRemaining), streamCts.Token)) > 0)
                 {
                     await context.Response.OutputStream.WriteAsync(buffer, 0, bytesRead);
                     bytesRemaining -= bytesRead;
