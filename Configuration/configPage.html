@@ -8,6 +8,18 @@
     <div id="TorrentStreamerConfigurationPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-checkbox">
         <div data-role="content">
             <div class="content-primary">
+                
+                <!-- Live Dashboard -->
+                <div class="dashboard-card" style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 20px; margin-bottom: 24px;">
+                    <div class="dashboard-title" style="font-size: 1.2rem; font-weight: 600; margin-bottom: 16px; color: #38bdf8; display: flex; align-items: center; gap: 8px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                        Live Streams Dashboard
+                    </div>
+                    <div id="dashboard-container">
+                        <div style="color: #94a3b8; font-size: 0.9rem;">Loading streams...</div>
+                    </div>
+                </div>
+
                 <form id="TorrentStreamerConfigForm">
                     <div class="sectionTitleContainer flex align-items-center">
                         <h2 class="sectionTitle">Torrent Streamer Configuration</h2>
@@ -112,7 +124,7 @@
                         </div>
                     </div>
 
-                    <div>
+                                        <div>
                         <button is="emby-button" type="submit" class="raised button-submit block emby-button">
                             <span>Save</span>
                         </button>
@@ -125,14 +137,54 @@
                 pluginUniqueId: "b5d8dc02-b797-485b-9f53-c9e95689d5bd"
             };
 
-            function toggleQbFields(page) {
-                var enabled = $('#UseQBittorrent', page).prop('checked');
-                $('#qbittorrentFields', page).css('display', enabled ? 'block' : 'none');
+            function formatSpeed(bytesPerSec) {
+                if (bytesPerSec === 0) return '0 B/s';
+                const k = 1024;
+                const sizes = ['B/s', 'KB/s', 'MB/s', 'GB/s'];
+                const i = Math.floor(Math.log(bytesPerSec) / Math.log(k));
+                return parseFloat((bytesPerSec / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
             }
 
-            $('#TorrentStreamerConfigurationPage').on('pageshow', function () {
+            async function updateDashboard() {
+                try {
+                    const res = await fetch('/TorrentStreamer/Status');
+                    const torrents = await res.json();
+                    
+                    const container = document.getElementById('dashboard-container');
+                    if (!torrents || torrents.length === 0) {
+                        container.innerHTML = '<div style="color: #94a3b8; font-size: 0.9rem;">No active streams.</div>';
+                        return;
+                    }
+                    
+                    let html = '';
+                    torrents.forEach(t => {
+                        html += 
+                            <div style="background: rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.05);">
+                                <div style="font-weight: 600; font-size: 1rem; margin-bottom: 8px; word-break: break-all;"> + t.Name + </div>
+                                <div style="display: flex; gap: 16px; font-size: 0.85rem; color: #94a3b8; margin-bottom: 12px;">
+                                    <span style="background: rgba(139, 92, 246, 0.2); color: #a78bfa; padding: 4px 8px; border-radius: 6px; font-weight: 600;"> + t.State + </span>
+                                    <span>??  + formatSpeed(t.DownloadSpeed) + </span>
+                                    <span>??  + formatSpeed(t.UploadSpeed) + </span>
+                                </div>
+                                <div style="background: rgba(0, 0, 0, 0.5); border-radius: 8px; height: 8px; width: 100%; overflow: hidden;">
+                                    <div style="background: linear-gradient(90deg, #8b5cf6, #38bdf8); height: 100%; width:  + t.Progress + %; transition: width 0.5s ease;"></div>
+                                </div>
+                            </div>
+                        ;
+                    });
+                    container.innerHTML = html;
+                } catch(e) {
+                    console.error(e);
+                }
+            }
+
+            #TorrentStreamerConfigurationPage.on('pageshow', function () {
                 Dashboard.showLoadingMsg();
                 var page = this;
+                
+                updateDashboard();
+                if(window.dashInterval) clearInterval(window.dashInterval);
+                window.dashInterval = setInterval(updateDashboard, 2000);
 
                 ApiClient.getPluginConfiguration(TorrentStreamerConfigurationPage.pluginUniqueId).then(function (config) {
                     $('#RadarrUrl', page).val(config.RadarrUrl || "");
@@ -156,6 +208,8 @@
 
                     Dashboard.hideLoadingMsg();
                 });
+
+                #TorrentStreamerConfigurationPage.on('pagehide', function() { if(window.dashInterval) clearInterval(window.dashInterval); });
 
                 // Toggle visibility when checkbox changes
                 $('#UseQBittorrent', page).on('change', function () { toggleQbFields(page); });
@@ -195,3 +249,4 @@
     </div>
 </body>
 </html>
+

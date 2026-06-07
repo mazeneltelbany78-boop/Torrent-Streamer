@@ -8,11 +8,11 @@
     "versions":  [
                      {
                          "changelog":  "Major Night-Shift Update: Added Live Dashboard UI, fully implemented Intelligent Pre-Buffering, Smart Cache Management, Dynamic Bandwidth Shifting, Dead Torrent Fallback, and Background Sync Locks.",
-                         "version":  "1.0.5.0",
-                         "checksum":  "350b6bd7761beef581b42ece16ca4e68",
+                         "version":  "1.0.5.1",
+                         "checksum":  "8e12fef9f2aa4b52036a3ab77db21061",
                          "timestamp":  "2026-06-06T23:01:08Z",
                          "targetAbi":  "10.9.0.0",
-                         "sourceUrl":  "https://github.com/mazeneltelbany78-boop/Torrent-Streamer/releases/download/v1.0.5.0/Jellyfin.Plugin.TorrentStreamer_1.0.5.0.zip"
+                         "sourceUrl":  "https://github.com/mazeneltelbany78-boop/Torrent-Streamer/releases/download/v1.0.5.1/Jellyfin.Plugin.TorrentStreamer_1.0.5.1.zip"
                      },
                      {
                          "version":  "1.0.4.4",
