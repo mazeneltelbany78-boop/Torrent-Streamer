@@ -1,0 +1,66 @@
+{
+    "guid":  "b5d8dc02-b797-485b-9f53-c9e95689d5bd",
+    "name":  "Torrent Streamer",
+    "description":  "Stream torrents instantly from Sonarr and Radarr.",
+    "overview":  "A Jellyfin plugin that seamlessly integrates your Sonarr and Radarr libraries, allowing you to instantly stream movies and TV shows directly from torrents.",
+    "owner":  "mazeneltelbany78-boop",
+    "category":  "Media",
+    "versions":  [
+                     {
+                         "changelog":  "Major Night-Shift Update: Added Live Dashboard UI, fully implemented Intelligent Pre-Buffering, Smart Cache Management, Dynamic Bandwidth Shifting, Dead Torrent Fallback, and Background Sync Locks.",
+                         "version":  "1.0.5.0",
+                         "checksum":  "350b6bd7761beef581b42ece16ca4e68",
+                         "timestamp":  "2026-06-06T23:01:08Z",
+                         "targetAbi":  "10.9.0.0",
+                         "sourceUrl":  "https://github.com/mazeneltelbany78-boop/Torrent-Streamer/releases/download/v1.0.5.0/Jellyfin.Plugin.TorrentStreamer_1.0.5.0.zip"
+                     },
+                     {
+                         "version":  "1.0.4.4",
+                         "changelog":  "Hotfix: Added safeguard against HTTP 500 exceptions silencing themselves as HTTP 200 responses, and fixed an issue where episodes without an index number could cause playback indexing nullability crashes.",
+                         "targetAbi":  "10.9.0.0",
+                         "sourceUrl":  "https://github.com/mazeneltelbany78-boop/Torrent-Streamer/releases/download/v1.0.4.4/Jellyfin.Plugin.TorrentStreamer_1.0.4.4.zip",
+                         "checksum":  "34ed27b6bb0429bd171955608cdd417b",
+                         "timestamp":  "2026-06-06T00:00:00Z"
+                     },
+                     {
+                         "version":  "1.0.4.3",
+                         "changelog":  "Major update: Intelligent Pre-Buffering, Smart Cache Management, Dynamic Bandwidth Shifting, Background Sync Thread-Safety, Subfolder/Video File prioritizing.",
+                         "targetAbi":  "10.9.0.0",
+                         "sourceUrl":  "https://github.com/mazeneltelbany78-boop/Torrent-Streamer/releases/download/v1.0.4.3/Jellyfin.Plugin.TorrentStreamer_1.0.4.3.zip",
+                         "checksum":  "2ef3bb08089df09d72f9d509f6f41ad9",
+                         "timestamp":  "2026-06-06T00:00:00Z"
+                     },
+                     {
+                         "version":  "1.0.4.2",
+                         "changelog":  "Fixed an issue where the qBittorrent settings menu wouldn\u0027t appear due to browser caching.",
+                         "targetAbi":  "10.9.0.0",
+                         "sourceUrl":  "https://github.com/mazeneltelbany78-boop/Torrent-Streamer/releases/download/v1.0.4.2/Jellyfin.Plugin.TorrentStreamer_1.0.4.2.zip",
+                         "checksum":  "ce9880ef9c4240a1fb8e0018f2f25407",
+                         "timestamp":  "2026-06-06T00:00:00Z"
+                     },
+                     {
+                         "version":  "1.0.4.1",
+                         "changelog":  "Critical hotfix: Resolved plugin load malfunction due to duplicate DLLs in package causing AssemblyLoad conflicts on Jellyfin startup.",
+                         "targetAbi":  "10.9.0.0",
+                         "sourceUrl":  "https://github.com/mazeneltelbany78-boop/Torrent-Streamer/releases/download/Torrent-streamer/TorrentStreamer_1.0.4.1.zip",
+                         "checksum":  "261299A807DE13812A6711E00BD9B999",
+                         "timestamp":  "2026-06-07T00:00:00Z"
+                     },
+                     {
+                         "version":  "1.0.1.0",
+                         "changelog":  "- Configurable metadata timeout (default 180s)\n- Custom tracker list support\n- Extended episode filename regex for broader naming conventions\n- Improved magnet link handling and tracker appending",
+                         "targetAbi":  "10.9.0.0",
+                         "sourceUrl":  "https://github.com/mazeneltelbany78-boop/Torrent-Streamer/releases/download/Torrent-streamer/TorrentStreamer_1.0.1.0.zip",
+                         "checksum":  "4F7B45C7FAB3FDC5223CE8EC311A6CBF",
+                         "timestamp":  "2026-06-07T00:00:00Z"
+                     },
+                     {
+                         "version":  "1.0.0.0",
+                         "changelog":  "Initial Release",
+                         "targetAbi":  "10.9.0.0",
+                         "sourceUrl":  "https://github.com/mazeneltelbany78-boop/Torrent-Streamer/releases/download/v1.0.0/TorrentStreamer_1.0.0.zip",
+                         "checksum":  "00189A083E9528C1CE05DC02503831B2",
+                         "timestamp":  "2026-06-01T00:00:00Z"
+                     }
+                 ]
+}

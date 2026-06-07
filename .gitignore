@@ -1,0 +1,9 @@
+bin/
+obj/
+tempZipTest/
+tempZipTest2/
+publish.ps1
+test.ps1
+radarr_releases.json
+*.zip
+*.log

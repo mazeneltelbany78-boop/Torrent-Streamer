@@ -1,0 +1,8 @@
+{
+    "category": "Live TV",
+    "guid": "b5d8dc02-b797-485b-9f53-c9e95689d5bd",
+    "name": "Torrent Streamer",
+    "description": "Stream torrents",
+    "owner": "Mazen",
+    "version": "1.0.0.0"
+}
