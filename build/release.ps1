@@ -26,6 +26,7 @@ Set-Content $csprojPath $csproj
 Write-Host "Cleaning and Building Release..."
 dotnet clean
 dotnet build -c Release
+if ($LASTEXITCODE -ne 0) { Write-Error "Build failed"; exit 1 }
 
 # 3. Zip the Payload
 $zipPath = "Jellyfin.Plugin.TorrentStreamer_$Version.zip"
@@ -78,4 +79,5 @@ if ($GithubToken) {
 } else {
     Write-Host "?? GitHub Token not provided. Skipping GitHub Release & Push." -ForegroundColor Yellow
 }
+
 

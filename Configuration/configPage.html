@@ -124,20 +124,97 @@
                             <input id="QBittorrentSavePath" name="QBittorrentSavePath" type="text" is="emby-input" />
                             <div class="fieldDescription">Override the default save location in qBittorrent. Leave empty to use qBittorrent's default.</div>
                         </div>
+                        <button type="button" is="emby-button" id="btn-test-sonarr" class="raised emby-button" onclick="testConnection('sonarr')" style="margin-top: 8px;">Test Sonarr Connection</button>
                     </div>
 
-                                        <div>
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="ProwlarrUrl">Prowlarr URL (Optional):</label>
+                        <input id="ProwlarrUrl" name="ProwlarrUrl" type="text" is="emby-input" />
+                        <div class="fieldDescription">Example: http://localhost:9696. Used to download .torrent files directly from Prowlarr.</div>
+                    </div>
+                    
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="ProwlarrApiKey">Prowlarr API Key (Optional):</label>
+                        <input id="ProwlarrApiKey" name="ProwlarrApiKey" type="text" is="emby-input" />
+                    </div>
+
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="ServerUrl">Server IP / URL:</label>
+                        <input id="ServerUrl" name="ServerUrl" type="text" is="emby-input" required="required" />
+                        <div class="fieldDescription">The IP or domain of your Jellyfin server with port 19420 (e.g., http://10.0.1.2:19420). Used in generated .strm files.</div>
+                    </div>
+
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="DownloadDirectory">Download/Cache Directory:</label>
+                        <input id="DownloadDirectory" name="DownloadDirectory" type="text" is="emby-input" required="required" />
+                        <div class="fieldDescription">The temporary folder where torrents are downloaded during streaming.</div>
+                    </div>
+                    
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="UploadThrottleKBps">Upload Throttle (KB/s):</label>
+                        <input id="UploadThrottleKBps" name="UploadThrottleKBps" type="number" is="emby-input" required="required" min="0" />
+                        <div class="fieldDescription">Set to 0 for unlimited. Default 50.</div>
+                    </div>
+
+                    <div class="checkboxContainer checkboxContainer-withDescription">
+                        <label>
+                             <input type="checkbox" is="emby-checkbox" id="KeepFilesAfterStreaming" name="KeepFilesAfterStreaming" />
+                             <span>Keep files after streaming</span>
+                        </label>
+                        <div class="fieldDescription checkboxFieldDescription">If unchecked, the torrent file will be deleted when playback stops.</div>
+                    </div>
+
+                    <!-- ── qBittorrent Section ─────────────────────────────── -->
+                    <div class="sectionTitleContainer" style="margin-top:2em;">
+                        <h2 class="sectionTitle">qBittorrent Integration <span style="font-size:0.7em;font-weight:normal;opacity:0.6;">(Optional)</span></h2>
+                    </div>
+                    <p>If enabled, the plugin will send torrents to your qBittorrent instance instead of using the built-in engine.</p>
+
+                    <div class="checkboxContainer checkboxContainer-withDescription">
+                        <label>
+                             <input type="checkbox" is="emby-checkbox" id="UseQBittorrent" name="UseQBittorrent" />
+                             <span>Use qBittorrent instead of built-in engine</span>
+                        </label>
+                        <div class="fieldDescription checkboxFieldDescription">When enabled, torrents are sent to qBittorrent for downloading.</div>
+                    </div>
+
+                    <div id="qbittorrentFields">
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="QBittorrentUrl">qBittorrent URL:</label>
+                            <input id="QBittorrentUrl" name="QBittorrentUrl" type="text" is="emby-input" />
+                            <div class="fieldDescription">Example: http://localhost:8080</div>
+                        </div>
+
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="QBittorrentUsername">Username:</label>
+                            <input id="QBittorrentUsername" name="QBittorrentUsername" type="text" is="emby-input" />
+                        </div>
+
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="QBittorrentPassword">Password:</label>
+                            <input id="QBittorrentPassword" name="QBittorrentPassword" type="password" is="emby-input" />
+                        </div>
+
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="QBittorrentSavePath">Save Path (Optional):</label>
+                            <input id="QBittorrentSavePath" name="QBittorrentSavePath" type="text" is="emby-input" />
+                            <div class="fieldDescription">Override the default save location in qBittorrent. Leave empty to use qBittorrent's default.</div>
+                        </div>
+                    </div>
+
+                    <div>
                         <button is="emby-button" type="submit" class="raised button-submit block emby-button">
                             <span>Save</span>
                         </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <script type="text/javascript">
+                        <script type="text/javascript">
             var TorrentStreamerConfigurationPage = {
                 pluginUniqueId: "b5d8dc02-b797-485b-9f53-c9e95689d5bd"
             };
+
+            function toggleQbFields(page) {
+                var enabled = $('#UseQBittorrent', page).prop('checked');
+                $('#qbittorrentFields', page).css('display', enabled ? 'block' : 'none');
+            }
 
             function formatSpeed(bytesPerSec) {
                 if (bytesPerSec === 0) return '0 B/s';
@@ -147,7 +224,7 @@
                 return parseFloat((bytesPerSec / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
             }
 
-                        async function testConnection(type) {
+            async function testConnection(type) {
                 const btn = document.getElementById('btn-test-' + type);
                 const url = type === 'radarr' ? document.getElementById('RadarrUrl').value : document.getElementById('SonarrUrl').value;
                 const key = type === 'radarr' ? document.getElementById('RadarrApiKey').value : document.getElementById('SonarrApiKey').value;
@@ -155,16 +232,16 @@
                 btn.innerText = 'Testing...';
                 
                 try {
-                    const res = await fetch(/TorrentStreamer/TestConnection?type=&url=&key=);
+                    const res = await fetch('/TorrentStreamer/TestConnection?type=' + type + '&url=' + encodeURIComponent(url) + '&key=' + encodeURIComponent(key));
                     const data = await res.json();
                     
                     if (data.success) {
-                        Dashboard.alert('? Connection Successful!');
+                        Dashboard.alert('\u2705 Connection Successful!');
                     } else {
-                        Dashboard.alert('? Failed: ' + data.message);
+                        Dashboard.alert('\u274C Failed: ' + data.message);
                     }
                 } catch(e) {
-                    Dashboard.alert('? Request Failed.');
+                    Dashboard.alert('\u274C Request Failed.');
                 }
                 btn.innerText = 'Test Connection';
             }
@@ -183,18 +260,17 @@
                     let html = '';
                     torrents.forEach(t => {
                         html += 
-                            <div style="background: rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.05);">
-                                <div style="font-weight: 600; font-size: 1rem; margin-bottom: 8px; word-break: break-all;"> + t.Name + </div>
-                                <div style="display: flex; gap: 16px; font-size: 0.85rem; color: #94a3b8; margin-bottom: 12px;">
-                                    <span style="background: rgba(139, 92, 246, 0.2); color: #a78bfa; padding: 4px 8px; border-radius: 6px; font-weight: 600;"> + t.State + </span>
-                                    <span>??  + formatSpeed(t.DownloadSpeed) + </span>
-                                    <span>??  + formatSpeed(t.UploadSpeed) + </span>
-                                </div>
-                                <div style="background: rgba(0, 0, 0, 0.5); border-radius: 8px; height: 8px; width: 100%; overflow: hidden;">
-                                    <div style="background: linear-gradient(90deg, #8b5cf6, #38bdf8); height: 100%; width:  + t.Progress + %; transition: width 0.5s ease;"></div>
-                                </div>
-                            </div>
-                        ;
+                            '<div style="background: rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.05);">' +
+                                '<div style="font-weight: 600; font-size: 1rem; margin-bottom: 8px; word-break: break-all;">' + t.Name + '</div>' +
+                                '<div style="display: flex; gap: 16px; font-size: 0.85rem; color: #94a3b8; margin-bottom: 12px;">' +
+                                    '<span style="background: rgba(139, 92, 246, 0.2); color: #a78bfa; padding: 4px 8px; border-radius: 6px; font-weight: 600;">' + t.State + '</span>' +
+                                    '<span>\u2B07\uFE0F ' + formatSpeed(t.DownloadSpeed) + '</span>' +
+                                    '<span>\u2B06\uFE0F ' + formatSpeed(t.UploadSpeed) + '</span>' +
+                                '</div>' +
+                                '<div style="background: rgba(0, 0, 0, 0.5); border-radius: 8px; height: 8px; width: 100%; overflow: hidden;">' +
+                                    '<div style="background: linear-gradient(90deg, #8b5cf6, #38bdf8); height: 100%; width: ' + t.Progress + '%; transition: width 0.5s ease;"></div>' +
+                                '</div>' +
+                            '</div>';
                     });
                     container.innerHTML = html;
                 } catch(e) {
@@ -202,13 +278,15 @@
                 }
             }
 
-            #TorrentStreamerConfigurationPage.on('pageshow', function () {
+            $('#TorrentStreamerConfigurationPage').on('pageshow', function () {
                 Dashboard.showLoadingMsg();
                 var page = this;
                 
                 updateDashboard();
                 if(window.dashInterval) clearInterval(window.dashInterval);
                 window.dashInterval = setInterval(updateDashboard, 2000);
+
+
 
                 ApiClient.getPluginConfiguration(TorrentStreamerConfigurationPage.pluginUniqueId).then(function (config) {
                     $('#RadarrUrl', page).val(config.RadarrUrl || "");
@@ -233,10 +311,12 @@
                     Dashboard.hideLoadingMsg();
                 });
 
-                #TorrentStreamerConfigurationPage.on('pagehide', function() { if(window.dashInterval) clearInterval(window.dashInterval); });
-
                 // Toggle visibility when checkbox changes
                 $('#UseQBittorrent', page).on('change', function () { toggleQbFields(page); });
+            });
+
+            $('#TorrentStreamerConfigurationPage').on('pagehide', function() {
+                if(window.dashInterval) clearInterval(window.dashInterval);
             });
 
             $('#TorrentStreamerConfigForm').on('submit', function (e) {
@@ -273,5 +353,3 @@
     </div>
 </body>
 </html>
-
-
