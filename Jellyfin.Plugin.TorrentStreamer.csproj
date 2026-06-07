@@ -5,9 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <Version>1.0.5.1</Version>
-    <AssemblyVersion>1.0.5.0</AssemblyVersion>
-    <FileVersion>1.0.5.0</FileVersion>
+    <Version>1.0.5.2</Version>
+    <AssemblyVersion>1.0.5.2</AssemblyVersion>
+    <FileVersion>1.0.5.2</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,4 +21,5 @@
   </ItemGroup>
 
 </Project>
+
 
