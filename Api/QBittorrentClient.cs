@@ -75,7 +75,8 @@ namespace Jellyfin.Plugin.TorrentStreamer.Api
             {
                 new KeyValuePair<string, string>("urls", magnet),
                 new KeyValuePair<string, string>("sequentialDownload", "true"),
-                new KeyValuePair<string, string>("firstLastPiecePrio", "true")
+                new KeyValuePair<string, string>("firstLastPiecePrio", "true"),
+                new KeyValuePair<string, string>("paused", "false")
             };
 
             if (!string.IsNullOrEmpty(savePath))
